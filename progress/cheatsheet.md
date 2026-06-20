@@ -28,3 +28,16 @@
   post = post / post.sum()
   ```
 - OJ 练习用 `tools/judge.py 学生实现 隐藏测试`。
+
+## 2.3 — Components of the Model（四零件 + Bayes 定理）
+- **四零件**（§2.3）：parameter p / likelihood Pr(W|p)=binom.pmf(W,N,p) / prior Pr(p) / posterior Pr(p|W)。
+- **Bayes 定理**（p49–50）：`后验 = (似然 × 先验) / 平均似然`。
+- **平均似然 Pr(W)**（分母）= `Σ(似然×先验)`（离散）=`∫like·prior dp`（连续）= 归一化常数，作用=让后验和为1。
+  - 即昨天的 `post/post.sum()` 里那个 `.sum()`。
+- ⚠️ 坑：分母乘 `prior(p)`（先验权重）不是 `p`（参数值）；似然 Pr(W|p) ≠ 后验 Pr(p|W)。
+- Python：
+  ```python
+  unstd = binom.pmf(W,N,grid) * prior      # 似然×先验
+  avg_like = unstd.sum()                    # 平均似然 = 分母
+  posterior = unstd / avg_like
+  ```
