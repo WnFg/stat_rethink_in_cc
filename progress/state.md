@@ -2,10 +2,10 @@
 
 - **状态 Status**: active
 - **当前章 Chapter**: 2 — Small Worlds and Large Worlds
-- **当前小节 Section**: 2.3 已完成（next = 2.4）
-- **下一节课焦点 Next lesson focus**: §2.4 Making the model go —— 三种引擎 grid/quadratic/MCMC，动手 grid + quap
+- **当前小节 Section**: 2.4 已完成 —— **第 2 章全部小节学完**（next = /review 章末复习 → /chapter 3）
+- **下一节课焦点 Next lesson focus**: 第 2 章 /review（误区清理 + 混合练习），然后 /chapter 3 Sampling the Imaginary
 - **已生成章教案 Chapters prepared**: ch02
-- **待检查 homework**: 有（① posterior_bayes 比较均匀 vs step 先验的 avg_like；② 补 bayes_update_seq 验证逐步≡一次性）
+- **待检查 homework**: 有（① avg_like 均匀 vs step 先验；② bayes_update_seq 验证逐步≡一次性；③ quap_globe(6,9) 95% 区间 vs beta(7,4) 真实区间）
 - **上次复习 Last review**: 无
 - **学情画像 Learner profile**（2026-06-20 摸底）:
   - **数学**：微积分/线代生疏 → 教学重直觉+图+代码，少手推；必要推导才给，且讲清动机。

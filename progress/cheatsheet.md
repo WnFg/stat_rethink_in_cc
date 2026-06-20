@@ -41,3 +41,20 @@
   avg_like = unstd.sum()                    # 平均似然 = 分母
   posterior = unstd / avg_like
   ```
+
+## 2.4 — Making the Model Go（三种引擎 + 二次近似）
+- **三引擎**（p52）：① grid（切网格逐点算，教学用、随参数爆炸 p54）② quadratic（高斯近似）③ MCMC（抽样，ch8）。
+- **quadratic approximation（=Laplace 近似）**：后验峰附近≈高斯，两数描述：MAP（峰）+ SD（宽）。
+  - 两步（p55）：minimize 找峰 MAP；峰处算曲率 |f''| → `SD = 1/√|f''|`。
+  - 理论链：对数后验 --二阶泰勒(近似)→ 抛物线 --exp(精确)→ 高斯；μ=MAP、σ²=1/|f''|。
+  - 多维：|f''|→Hessian 矩阵，σ²=负 Hessian 的逆。
+  - 何时准：大样本→后验趋高斯(Bernstein–von Mises)；小样本/偏态失真(Fig 2.8)。
+  - MAP（均匀先验）= MLE = 观测频率 W/N；贝叶斯多给了 SD 与整条分布。
+- ⚠️ 坑：① `(neg(m+eps)-neg(m))/eps` 括号别漏（/ 优先级高）；② 近似的是【对数后验】，不是高斯本身。
+- Python（数值二阶导）：
+  ```python
+  neg = lambda p: -binom.logpmf(W, N, np.clip(p,1e-9,1-1e-9))
+  m = minimize(neg, 0.5, bounds=[(1e-6,1-1e-6)]).x[0]
+  second = (neg(m+eps) - 2*neg(m) + neg(m-eps))/eps**2   # 曲率
+  sd = 1/np.sqrt(second)
+  ```
