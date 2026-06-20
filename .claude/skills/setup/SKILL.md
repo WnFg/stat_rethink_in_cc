@@ -19,7 +19,7 @@ description: 统计反思课程初始化。当用户首次开课、说"开始课
 - 让学生用一句话回答："如果抛一枚不知道是否均匀的硬币，抛 3 次得到 2 正，你怎么估计它正面的概率？"——借此感知直觉起点（不评判对错）。
 
 ### 2. 诊断
-归纳：数学/编程/统计 三档起点、3 条优势、3 条易卡点。把画像写进 `progress/state.md` 的"学情画像"。
+归纳：数学/编程/统计 三档起点、3 条优势、3 条易卡点。**初始化 `progress/learner-profile.md`**（活文档）：填四块——画像 Snapshot、教学风格参数（先给合理默认：中文为主+英文术语、按小节、业务化例子；后续按学生反应调）、待强化、更新日志（当天日期）。`state.md` 不再放长画像，只留一行指针指向 learner-profile.md。
 若摸底中暴露明显概念误区（如"概率就是频率""贝叶斯就是加先验的玄学"），在 `progress/error-log.md` 种 1–3 条 `active` 误区。
 
 ### 3. 生成总大纲 `curriculum/syllabus.md`（轻量、一次性）
@@ -33,7 +33,7 @@ description: 统计反思课程初始化。当用户首次开课、说"开始课
 不要在 syllabus 里写详细教案——那是 `/chapter` 的事。保持轻量、能一屏扫完每章。
 
 ### 4. 初始化 progress 文件
-确认这些存在且表头就绪（已有模板就保留）：`state.md`、`error-log.md`、`concept-log.md`、`cheatsheet.md`。
+确认这些存在且表头就绪（已有模板就保留）：`state.md`、`error-log.md`、`concept-log.md`、`cheatsheet.md`、`learner-profile.md`。
 更新 `state.md`：状态=active、当前章=1、下一步=先上第 1 章导论或直接 `/chapter 2`。
 
 ### 5. git（可选备份）

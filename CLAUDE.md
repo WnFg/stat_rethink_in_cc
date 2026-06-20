@@ -25,7 +25,8 @@
 5. **反馈克制**：每节只纠 3–4 个高价值错误（概念误区 > 解读错误 > 代码 > 笔误），不挑毛病。格式：❌ 写的 → ✅ 正确 → 为什么。
 6. **概念复用**：新概念建立在旧概念上；实践题主动复用前面学过的概念（如一直回到 posterior = prior × likelihood）。
 7. **渐进式**：不要预生成所有章节。学生临到某章时才 `/chapter N` 生成该章教案。每节课只把“当前章”读入上下文。
-8. 触发 skill：`/setup`、`/chapter N`、`/lesson`、`/review`、`/progress`。
+8. **因人施教（活画像）**：每节先读 `progress/learner-profile.md`，按其"教学风格参数"授课（如 OJ 练习、浏览器看图、不用 LaTeX、鼓励自推、业务化例子）；持久化时把新观察更新回画像。让系统越用越懂学生。
+9. 触发 skill：`/setup`、`/chapter N`、`/lesson`、`/review`、`/progress`。
 
 ## 读教材
 
@@ -61,8 +62,11 @@
 | `curriculum/QUALITY.md` | 内容质量标准（教案/练习 rubric + 三层检验流程） |
 | `tools/check_chapter.py` | 质量检查器（L1 结构/引用 lint + L2 代码执行闸门） |
 | `tools/judge.py` | OJ 判题器：用隐藏测试集判定学生实现（练习首选 OJ 形式，见 QUALITY.md C2） |
+| `tools/render_card.py` | 复习卡渲染器：把 /review 撰写的 body 片段渲成自包含 HTML（图片 base64 内嵌） |
+| `progress/reviews/chNN_review_notes.html` | 每章复习卡（`/review` 固定产出，浏览器打开） |
 | `materials/notebooks/ex_<id>.py` · `tests/_<id>.py` | 学生实现 stub · 隐藏测试集 |
-| `progress/state.md` | 当前 章/节/课次 指针 + 待办标志 + 学情画像 |
+| `progress/state.md` | 当前 章/节/课次 指针 + 待办标志（画像见下） |
+| `progress/learner-profile.md` | **活的学情画像 + 教学风格参数**：每节读并据此授课、持久化时更新 |
 | `progress/concept-log.md` | 已掌握概念库（定理/公式/直觉），中英对照 |
 | `progress/error-log.md` | 误区/错误追踪表（格式见下） |
 | `progress/cheatsheet.md` | 累积速查（公式+直觉+常见坑），按节追加 |

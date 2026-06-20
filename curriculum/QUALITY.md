@@ -91,3 +91,14 @@
 - **L3 独立审阅**（subagent，每章强制）：另起一个 agent 重读该章原文，按 A1/A6/B3/B5 审忠实性、教学性、目标对齐、表述；返回问题清单，修完才算过。
 
 **通过线**：L1、L2 必须全绿；L3 的问题全部已处理或有明确豁免理由。`/chapter` 与 `/lesson` 未过检不得标记完成，并须把检查结论汇报给学生。
+
+---
+
+## E. 复习卡标准（`/review` 固定产出）
+
+每章 `/review` 末尾用 `tools/render_card.py` 渲染一张复习卡 `progress/reviews/chNN_review_notes.html`。要求：
+- **必含 4 段**：① 知识总结（主轴流程图 + 核心词汇 + 关键公式 + 引擎/对比表 + 本章难点）② 内嵌本章可视化（`materials/figures/`，渲染器自动 base64 内嵌）③ ⭐学习画像段（高光与兴趣、易错点红绿对照=error-log active、待强化、已攻克）④ 速查卡（可抄的公式+代码）。
+- **必须个性化**：画像段取自 `learner-profile.md` + 本章真实表现，不是通用模板。
+- **自包含**：图片 base64 内嵌、无外链、可离线/分享。
+- **面向人类易读**：用 `render_card.py` 文档化的 CSS 类；**不用点阵/ASCII 图**、讲解里不用 LaTeX。
+- 内容真实：总结/数值要与 lessons、concept-log、error-log 一致（沿用纪律：不凭记忆编）。
