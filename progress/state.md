@@ -6,7 +6,7 @@
 - **下一节课焦点 Next lesson focus**: 第 2 章 /review（误区清理 + 混合练习），然后 /chapter 3 Sampling the Imaginary
 - **已生成章教案 Chapters prepared**: ch02
 - **待检查 homework**: 有（① avg_like 均匀 vs step 先验；② bayes_update_seq 验证逐步≡一次性；③ quap_globe(6,9) 95% 区间 vs beta(7,4) 真实区间）
-- **上次复习 Last review**: 无
+- **上次复习 Last review**: 第 2 章 2026-06-20（reviews/ch02.md）—— 3 条错题复习全对、暂仍 active
 - **学情画像 Learner profile**（2026-06-20 摸底）:
   - **数学**：微积分/线代生疏 → 教学重直觉+图+代码，少手推；必要推导才给，且讲清动机。
   - **编程**：底子可以，但 NumPy/PyMC 等库用得少 → 代码逻辑不用多讲，重点在库 API（np.linspace/trapezoid、scipy.stats、pm.sample 等）给足提示与模板。
