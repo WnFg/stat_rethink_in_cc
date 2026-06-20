@@ -8,6 +8,7 @@
 1. **先读懂教材，再设计内容**：生成任何教案/讲解/练习前，**必须先用 `tools/pdftext.py` 通读对应章节原文**，理解其内容与教学目标。**严禁仅凭既有知识或记忆编写**。课程可以延伸、扩展、补充业务化例子，但必须**忠实反映教材的内容与教学目标**，不能脱离教材另起炉灶。
 2. **讲授和出题都要标注教材出处**：概念、worked example、练习、引用的书中习题，尽量都带上**章节号 + PDF 页码**（如「§2.4 网格近似，p50」「书中习题 2M1，p58」）。每个论点都应可追溯回教材具体位置。
 3. 习题编号、数值、公式等**事实性内容必须回原文核对**，不得凭记忆填写。
+4. **生成内容必须过质量闸门**：教案/练习须满足 `curriculum/QUALITY.md` 的 rubric，并通过三层检验（L1+L2：`tools/check_chapter.py`；L3：每章强制 subagent 独立审阅）。未过检不得标记完成。计算题的预期答案一律由 `assert` 解法块自证，严禁凭记忆写答案。
 
 ## 学生 & 语言
 
@@ -56,7 +57,9 @@
 | 文件 | 作用 |
 |------|------|
 | `curriculum/syllabus.md` | 总大纲：15 章→小节→课次→页码→里程碑（`/setup` 一次性生成） |
-| `curriculum/chapters/chNN.md` | 某章详细教案+设计练习（`/chapter` 渐进生成） |
+| `curriculum/chapters/chNN.md` | 某章详细教案+设计练习（`/chapter` 渐进生成，须过质检） |
+| `curriculum/QUALITY.md` | 内容质量标准（教案/练习 rubric + 三层检验流程） |
+| `tools/check_chapter.py` | 质量检查器（L1 结构/引用 lint + L2 代码执行闸门） |
 | `progress/state.md` | 当前 章/节/课次 指针 + 待办标志 + 学情画像 |
 | `progress/concept-log.md` | 已掌握概念库（定理/公式/直觉），中英对照 |
 | `progress/error-log.md` | 误区/错误追踪表（格式见下） |
