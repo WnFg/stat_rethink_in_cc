@@ -1,0 +1,13 @@
+# 生成的图（可重生成，不入库）
+materials/figures/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# 本地权限覆盖
+.claude/settings.local.json
+
+# 教材 PDF（体积大、版权；按需本地保留）
+RM-StatRethink-Bayes.pdf
