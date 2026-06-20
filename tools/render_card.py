@@ -22,6 +22,7 @@ body 片段可用的 CSS 类（撰写时对照）：
   .formula  /  .formula .big  公式框（居中、虚线边）
   table / th / td             表格
   .pill.good|.warn|.err|.idea 醒目色块（绿/琥珀/红/紫）—— 学习画像段常用
+  .principle                  作者核心观点块（紫色左边线）；内含 <b>观点</b> 与 <span class="src">出处 pXX</span>
   .tag.t-blue|t-green|t-amber|t-purple   小圆标签
   .wrong (红粗) / .right (绿粗)          易错点红绿对照
   pre / pre .c                代码块 / 代码注释
@@ -88,6 +89,10 @@ CSS = r"""
   .pill.err{background:var(--red-soft);border-color:#f6c4c4}
   .pill.idea{background:var(--purple-soft);border-color:#dcccfb}
   .pill h3{margin:0 0 8px}
+  .principle{border-left:4px solid var(--purple);background:#faf8ff;border-radius:0 10px 10px 0;
+    padding:11px 15px;margin:10px 0}
+  .principle b{color:var(--purple)}
+  .principle .src{color:var(--muted);font-size:12.5px;font-style:normal}
   .wrong{color:var(--red);font-weight:600}
   .right{color:var(--green);font-weight:600}
   figure{margin:10px 0}

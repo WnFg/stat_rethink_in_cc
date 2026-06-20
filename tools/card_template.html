@@ -1,0 +1,60 @@
+<!--
+  复习卡统一模板（body 骨架）—— /review 复制本文件为 progress/reviews/chNN_card_body.html 后逐段填充。
+  渲染：python3 tools/render_card.py --title ... --body progress/reviews/chNN_card_body.html --out ... --open
+  8 段顺序固定；每段都要个性化到本章真实内容，并遵守 QUALITY.md「课程设计纪律」（忠实教材、标页码、不凭记忆编）。
+  CSS 类见 render_card.py 顶部注释。所有 <img src="materials/figures/xx.png"> 会被自动 base64 内嵌。
+-->
+
+<h2>① 一图总览</h2>
+<div class="card">
+  <div class="flow">
+    <div class="box"><b>第一步</b><span>一句话</span></div><div class="arrow">→</div>
+    <div class="box"><b>第二步</b><span>一句话</span></div><div class="arrow">→</div>
+    <div class="box"><b>第三步</b><span>一句话</span></div>
+  </div>
+  <p class="muted small" style="margin:10px 0 0">本章主轴一句话。</p>
+</div>
+
+<h2>② 数学思想与作者核心观点</h2>
+<!-- ★关键段：不只讲公式，更要讲 McElreath 想让你接受的世界观/统计哲学。每条带页码、忠实教材。 -->
+<div class="card">
+  <p class="muted small">教材作者反复强调的、比公式更重要的"为什么"。每条都可追溯到原文。</p>
+  <div class="principle"><b>观点标题</b> — 一两句阐述作者的核心主张及其意义。 <span class="src">出处 §x.x, pXX</span></div>
+  <div class="principle"><b>观点标题</b> — …… <span class="src">出处 pXX</span></div>
+  <!-- 通常 3–6 条；覆盖：本章的统计哲学、对常见误解的纠偏、数学思想的动机 -->
+  <h3>关键数学思想</h3>
+  <ul>
+    <li>本章背后的数学直觉/原理（如"乘法只是压缩的计数""对数后验≈抛物线"），点明动机而非只列公式。</li>
+  </ul>
+</div>
+
+<h2>③ 核心概念与公式</h2>
+<div class="card">
+  <div class="grid2">
+    <div class="vocab"><b>术语 EN</b> — 中文释义 + 代码对应。</div>
+  </div>
+  <div class="formula"><span class="big">关键公式（纯文本/HTML，不用 LaTeX）</span></div>
+</div>
+
+<h2>④ 关键可视化</h2>
+<div class="card">
+  <figure><img src="materials/figures/xx.png" alt=""><figcaption>说明 + 出处 Fig</figcaption></figure>
+</div>
+
+<h2>⑤ 方法 / 对比表</h2>
+<div class="card">
+  <table><tr><th>列</th><th>列</th></tr><tr><td>…</td><td>…</td></tr></table>
+</div>
+
+<h2>⑥ ★ 你的学习画像（个性化，取自 learner-profile.md + 本章表现）</h2>
+<div class="pill idea"><h3>🌟 高光与兴趣</h3><ul><li>…</li></ul></div>
+<div class="pill warn"><h3>⚠️ 易错点（红绿对照，对应 error-log active）</h3>
+  <table><tr><th>易错</th><th><span class="wrong">❌</span></th><th><span class="right">✅</span></th></tr></table></div>
+<div class="pill warn"><h3>🎯 待强化</h3>…</div>
+<div class="pill good"><h3>✅ 已攻克</h3>…</div>
+
+<h2>⑦ 速查卡</h2>
+<div class="card"><pre><span class="c"># 可直接抄的公式 + 代码</span></pre></div>
+
+<h2>⑧ 下一步</h2>
+<div class="card"><p>下一章/挂账 homework/命令 <span class="kbd">/chapter N</span>。</p></div>

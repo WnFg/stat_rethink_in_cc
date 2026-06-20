@@ -1,0 +1,129 @@
+<h2>① 一图看懂整章</h2>
+<div class="card">
+  <div class="flow">
+    <div class="box"><b>数路径</b><span>§2.1 · 数"有多少种方式产生数据"，标准化成概率</span></div>
+    <div class="arrow">→</div>
+    <div class="box"><b>后验公式</b><span>§2.3 · 后验 =(似然×先验)/平均似然</span></div>
+    <div class="arrow">→</div>
+    <div class="box"><b>三种引擎</b><span>§2.4 · grid / quadratic / MCMC 把后验算出来</span></div>
+  </div>
+  <p class="muted small" style="margin:10px 0 0">主轴：<b>贝叶斯推断 = 在所有可能的参数里，按"它们产生观测数据的相对方式数"重新分配可信度。</b></p>
+</div>
+
+<h2>② 数学思想与作者核心观点 ★</h2>
+<div class="card">
+  <p class="muted small">McElreath 在第 2 章真正想让你接受的，是一套<b>统计世界观</b>——比任何公式都重要。每条都可追溯到原文。</p>
+
+  <div class="principle"><b>小世界 vs 大世界（small world / large world）</b> — 模型只是"小世界"里自洽的逻辑；它在小世界最优，<b>不保证</b>在真实的"大世界"也好。大世界表现只能<b>事后检验</b>，无法由逻辑推出。 <span class="src">§引言, p32</span></div>
+
+  <div class="principle"><b>贝叶斯推断没有玄学，就是"数路径"</b> — "Bayesian inference is really just counting and comparing of possibilities." 乘法只是<b>压缩了的计数</b>；Bayes 定理之所以看着复杂，只因它把"数路径"这件事的关系藏起来了。 <span class="src">§2.1, p33 / §2.3, p50</span></div>
+
+  <div class="principle"><b>没有免费午餐（no free lunch）</b> — 贝叶斯估计对<b>任何样本量</b>都有效，代价是依赖先验；频率派则要选估计量。"Both golems pay for lunch with their assumptions."——两边都用假设买单，没有谁不付钱。 <span class="src">§2.2 Rethinking, p44</span></div>
+
+  <div class="principle"><b>模型不是"真理"，关键问"够不够用"</b> — 模型的假设永远不完全对，所以"检验模型是否为真"没意义；目标是<b>检查它对某个用途是否够用</b>。"Failure to conclude that a model is false must be a failure of our imagination, not a success of the model." <span class="src">§2.2 evaluate, p43–45</span></div>
+
+  <div class="principle"><b>模型很自信 ≠ 模型很好</b> — 数据越多后验越尖，但<b>再自信也只是"在这个模型设定下"</b>；错误的模型一样可以很自信。 <span class="src">§2.2, p43</span></div>
+
+  <div class="principle"><b>先验是"工程假设"，是模型的一部分</b> — 先验不神秘也不主观可耻，它和似然一样是<b>可被检验、修改、质询</b>的建模选择。"interrogated like other assumptions: by altering it and checking how sensitive inference is." <span class="src">§2.3.3, p48–49</span></div>
+
+  <div class="principle"><b>概率是"认知"，不是客观实在</b> — de Finetti："PROBABILITY DOES NOT EXIST." 概率描述的是<b>一个信息有限的观察者</b>对世界的不确定，而非世界本身的客观属性。说"水的概率是 0.7"，说的是我们的知识状态。 <span class="src">§2.6 习题 2E4, p59</span></div>
+
+  <div class="principle"><b>贝叶斯分析不等于"用了 Bayes 定理"；怎么拟合也是模型的一部分</b> — 任何概率推断最终都会用到 Bayes 定理；贝叶斯的特别之处是<b>用它量化对不可观测量（参数/模型）的不确定</b>。而且"How you fit the model is part of the model"——网格/二次/MCMC 的选择会影响结论。 <span class="src">§2.3 Rethinking, p50 / §2.4 Rethinking, p52</span></div>
+
+  <h3>关键数学思想（动机，不只公式）</h3>
+  <ul>
+    <li><b>乘法 = 压缩的计数</b>：先验×似然之所以是"相乘"，是因为路径数 = 先验路径数 × 新路径数（§2.1.2, p38）。</li>
+    <li><b>归一化 = 把相对计数变成概率</b>：分母"平均似然"只为让后验积分到 1，不含额外信息（§2.3.4, p50）。</li>
+    <li><b>对数后验 ≈ 抛物线</b>：二次近似的全部数学动机——任何高斯的对数是抛物线，于是峰附近用二阶泰勒就够（§2.4.2, p54）。</li>
+    <li><b>后验是分布，不是点</b>：MLE/MAP 只是峰；贝叶斯坚持给出<b>整条不确定性</b>，这是它对小样本"诚实"的根源（§2.4.2, p57）。</li>
+  </ul>
+</div>
+
+<h2>③ 核心概念与公式</h2>
+<div class="card">
+  <h3>四个核心词汇（§2.1, p40）</h3>
+  <div class="grid2">
+    <div class="vocab"><b>parameter 参数</b> — 要推断的未知量 <code>p</code>；代码里是 <code>grid</code> 上每个候选值。</div>
+    <div class="vocab"><b>likelihood 似然</b> — 给定 p 产生数据的相对可能性，<code>binom.pmf(W,N,p)</code>。</div>
+    <div class="vocab"><b>prior 先验</b> — 看数据前对 p 的初始权重，<code>np.ones_like(grid)</code>。</div>
+    <div class="vocab"><b>posterior 后验</b> — 看完数据后的权重 <code>Pr(p|W)</code>，<b>一整条分布</b>。</div>
+  </div>
+  <h3>Bayes 定理（§2.3, p49–50）</h3>
+  <div class="formula"><span class="big">后验 = (似然 × 先验) / 平均似然</span><br>
+    <span class="mono">Pr(p|W) = Pr(W|p)·Pr(p) / Pr(W)　　Pr(W)=∫Pr(W|p)Pr(p)dp =(like×prior).sum()</span></div>
+  <h3>二次近似（§2.4.2, p55）</h3>
+  <div class="formula">对数后验 —(二阶泰勒，<span class="wrong">近似</span>)→ 抛物线 —(exp，<span class="right">精确</span>)→ 高斯　|　μ=MAP，σ²=1/|f″|，SD=1/√曲率</div>
+</div>
+
+<h2>④ 关键可视化</h2>
+<div class="card">
+  <figure><img src="materials/figures/2.2_updating.png" alt="贝叶斯更新"><figcaption>逐次贝叶斯更新：见 W 峰右移、见 L 左移，越多越窄；顺序无关（复现 Fig 2.5, p43）</figcaption></figure>
+  <figure><img src="materials/figures/2.4_quap.png" alt="quap vs 真实后验"><figcaption>二次近似(黑虚线) vs 真实后验(蓝实线)：n=9 偏态偏差明显、n=36 几乎重合（复现 Fig 2.8, p56）</figcaption></figure>
+</div>
+
+<h2>⑤ 三种引擎对比（§2.4, p52）</h2>
+<div class="card">
+  <table>
+    <tr><th>引擎</th><th>怎么做</th><th>特点</th></tr>
+    <tr><td><b>① Grid 网格近似</b></td><td>把 p 切网格，逐点算 <code>先验×似然</code> 归一化</td><td>直观、教学用；<span class="wrong">随参数增多急剧变慢</span></td></tr>
+    <tr><td><b>② Quadratic 二次近似</b></td><td>用高斯逼近后验峰（MAP+SD）</td><td>便宜、后半本书主力；小样本/偏态失真</td></tr>
+    <tr><td><b>③ MCMC</b></td><td>不直接算，<b>从后验抽样</b></td><td>复杂/多层模型主力（第 8 章）</td></tr>
+  </table>
+  <h3>MLE 与 MAP</h3>
+  <p class="small">MLE = <code>argmax 似然</code> = 观测频率 W/N；MAP = <code>argmax(似然×先验)</code>。<b>均匀先验时 MAP=MLE</b>；先验有倾向时 MAP 被拉偏；数据越多 MAP→MLE。两者都只是"一个点"，贝叶斯真正的答案是整条后验。</p>
+</div>
+
+<h2>⑥ ★ 你的学习画像</h2>
+<div class="pill idea">
+  <h3>🌟 高光与兴趣</h3>
+  <ul>
+    <li><b>刨根问底的理论倾向</b>：主动追问二次近似的数学基础，一路问到 σ²=1/|f″| 的来历。</li>
+    <li><b>强直觉</b>：自己发现 <code>binom.pmf(w,1,grid)</code> 喂单观测时就是 <code>p</code>/<code>1−p</code>。</li>
+    <li><b>会自己推导</b>：把数值二阶导自推成"(前向−后向一阶导)/eps"，等价标准公式。</li>
+    <li><b>关注 API 机制</b>：主动问 <code>binom.pmf / minimize / np.clip</code> 在做什么。</li>
+  </ul>
+</div>
+<div class="pill warn">
+  <h3>⚠️ 易错点（已澄清，反复看）</h3>
+  <table>
+    <tr><th>易错</th><th><span class="wrong">❌ 当时</span></th><th><span class="right">✅ 正确</span></th></tr>
+    <tr><td>归一化分母</td><td>Σ(似然 × <span class="wrong">p</span>)</td><td>Σ(似然 × <span class="right">prior(p) 先验权重</span>)</td></tr>
+    <tr><td>二次近似谁近似谁</td><td>把<span class="wrong">后验</span>用抛物线近似、<span class="wrong">取对数</span>得高斯</td><td>把<span class="right">对数后验</span>用抛物线近似、<span class="right">exp</span>得高斯（高斯↔抛物线精确）</td></tr>
+    <tr><td>数值导数括号</td><td><code>f(x+h) - f(x) <span class="wrong">/ h</span></code></td><td><code><span class="right">(</span>f(x+h)-f(x)<span class="right">)</span>/h</code></td></tr>
+  </table>
+</div>
+<div class="pill warn">
+  <h3>🎯 待强化：可信区间 ≠ 置信区间（练到脱口而出）</h3>
+  <div class="grid2">
+    <div><span class="tag t-blue">贝叶斯·可信区间</span><br>"给定数据，p 落在 [a,b] 的<b>概率是 95%</b>。" 概率属于<b>参数</b>：<code>P(a≤p≤b|数据)=0.95</code>。</div>
+    <div><span class="tag t-amber">频率派·置信区间</span><br>参数是<b>固定</b>值；95% 指<b>程序</b>——重复实验 95% 的此类区间盖住真值。不能对单个区间说"95% 含真值"。</div>
+  </div>
+</div>
+<div class="pill good">
+  <h3>✅ 已攻克</h3>
+  <p class="small" style="margin:0">数路径计数 · <code>bayes_update</code> · <code>posterior_bayes</code>(显式分母) · <code>quap_globe</code>(自推曲率) · A/B 业务建模(MAP=0.65, 95%区间[0.43,0.82])。4 节 OJ 全过 + 复习 fix-this 全对。</p>
+</div>
+
+<h2>⑦ 速查卡</h2>
+<div class="card">
+<pre><span class="c"># 网格近似：算后验（均匀先验）</span>
+grid = np.linspace(0, 1, 1000)
+like = binom.pmf(W, N, grid)        <span class="c"># 似然（grid=一排候选 p）</span>
+post = like / like.sum()            <span class="c"># .sum() 就是平均似然 Pr(W)=分母</span>
+map_p = grid[np.argmax(post)]       <span class="c"># MAP（均匀先验下=MLE=W/N）</span>
+
+<span class="c"># 95% 可信区间（百分位）</span>
+cum = np.cumsum(post)
+lo, hi = grid[np.searchsorted(cum,0.025)], grid[np.searchsorted(cum,0.975)]
+
+<span class="c"># 二次近似：找峰 + 量曲率</span>
+neg = lambda p: -binom.logpmf(W, N, np.clip(p,1e-9,1-1e-9))
+m   = minimize(neg, 0.5, method="L-BFGS-B", bounds=[(1e-6,1-1e-6)]).x[0]
+sd  = 1/np.sqrt((neg(m+eps)-2*neg(m)+neg(m-eps))/eps**2)</pre>
+</div>
+
+<h2>⑧ 下一步</h2>
+<div class="card">
+  <p><b>第 3 章 Sampling the Imaginary</b>：从后验<b>采样</b>来做推断（算区间、后验预测、模型检查）。命令 <span class="kbd">/chapter 3</span>。</p>
+  <p class="small muted" style="margin:6px 0 0">挂账 homework：avg_like 均匀 vs step · <code>bayes_update_seq</code> · quap 95% 区间 vs 真实区间。</p>
+</div>

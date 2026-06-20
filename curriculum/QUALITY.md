@@ -96,9 +96,20 @@
 
 ## E. 复习卡标准（`/review` 固定产出）
 
-每章 `/review` 末尾用 `tools/render_card.py` 渲染一张复习卡 `progress/reviews/chNN_review_notes.html`。要求：
-- **必含 4 段**：① 知识总结（主轴流程图 + 核心词汇 + 关键公式 + 引擎/对比表 + 本章难点）② 内嵌本章可视化（`materials/figures/`，渲染器自动 base64 内嵌）③ ⭐学习画像段（高光与兴趣、易错点红绿对照=error-log active、待强化、已攻克）④ 速查卡（可抄的公式+代码）。
-- **必须个性化**：画像段取自 `learner-profile.md` + 本章真实表现，不是通用模板。
+每章 `/review` 末尾用 `tools/render_card.py` 渲染一张复习卡 `progress/reviews/chNN_review_notes.html`。
+
+**统一模板（8 段，顺序固定）**：复制 `tools/card_template.html` 为 `progress/reviews/chNN_card_body.html` 后逐段填充——
+1. **一图总览**：本章主轴流程图（`.flow`）。
+2. **★ 数学思想与作者核心观点**（不可省）：用 `.principle` 块列出 **McElreath 想传达的核心观点/统计哲学**（小世界vs大世界、"贝叶斯=数路径"、模型非真理、概率是认知不是客观、先验是模型的一部分、no free lunch…），**每条带 §节号+页码、忠实原文**；再用一段"关键数学思想"点明本章数学背后的**动机与直觉**（不只列公式）。
+3. **核心概念与公式**：术语卡（`.vocab`）+ 关键公式（`.formula`，纯文本/HTML 不用 LaTeX）。
+4. **关键可视化**：内嵌 `materials/figures/`（渲染器自动 base64 内嵌）。
+5. **方法/对比表**。
+6. **★ 学习画像段**（个性化，取自 `learner-profile.md` + 本章真实表现）：`.pill.idea` 高光与兴趣、`.pill.warn` 易错点（`.wrong`→`.right` 红绿对照=error-log active）、待强化、`.pill.good` 已攻克。
+7. **速查卡**：可抄的公式 + 代码（`pre`）。
+8. **下一步**。
+
+**硬性要求**：
+- **第 2 段（数学思想与作者核心观点）必须有且充实**——这是复习卡的灵魂，不能只堆公式机械。
 - **自包含**：图片 base64 内嵌、无外链、可离线/分享。
-- **面向人类易读**：用 `render_card.py` 文档化的 CSS 类；**不用点阵/ASCII 图**、讲解里不用 LaTeX。
-- 内容真实：总结/数值要与 lessons、concept-log、error-log 一致（沿用纪律：不凭记忆编）。
+- **面向人类易读**：用 `render_card.py` 文档化的 CSS 类；**不用点阵/ASCII 图**、不用 LaTeX。
+- **内容真实**：观点/总结/数值与原文及 lessons/concept-log/error-log 一致（沿用纪律：忠实教材、标页码、不凭记忆编）。
