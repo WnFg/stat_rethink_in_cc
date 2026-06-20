@@ -1,11 +1,11 @@
 # 课程状态 Course State
 
-- **状态 Status**: active（已初始化，待第一节 `/lesson`）
+- **状态 Status**: active
 - **当前章 Chapter**: 2 — Small Worlds and Large Worlds
-- **当前小节 Section**: 2.1（未上）
-- **下一节课焦点 Next lesson focus**: 2.1 the garden of forking data —— 用"数路径"理解贝叶斯更新
+- **当前小节 Section**: 2.1 已完成（next = 2.2）
+- **下一节课焦点 Next lesson focus**: §2.2 Building a model —— 从数弹珠过渡到 globe tossing 与连续参数 p
 - **已生成章教案 Chapters prepared**: ch02
-- **待检查 homework**: 无
+- **待检查 homework**: 有（练习1加工厂先验 prior=[0,2,1,0]，看最可信猜想是否改变）
 - **上次复习 Last review**: 无
 - **学情画像 Learner profile**（2026-06-20 摸底）:
   - **数学**：微积分/线代生疏 → 教学重直觉+图+代码，少手推；必要推导才给，且讲清动机。
