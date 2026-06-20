@@ -60,6 +60,8 @@
 | `curriculum/chapters/chNN.md` | 某章详细教案+设计练习（`/chapter` 渐进生成，须过质检） |
 | `curriculum/QUALITY.md` | 内容质量标准（教案/练习 rubric + 三层检验流程） |
 | `tools/check_chapter.py` | 质量检查器（L1 结构/引用 lint + L2 代码执行闸门） |
+| `tools/judge.py` | OJ 判题器：用隐藏测试集判定学生实现（练习首选 OJ 形式，见 QUALITY.md C2） |
+| `materials/notebooks/ex_<id>.py` · `tests/_<id>.py` | 学生实现 stub · 隐藏测试集 |
 | `progress/state.md` | 当前 章/节/课次 指针 + 待办标志 + 学情画像 |
 | `progress/concept-log.md` | 已掌握概念库（定理/公式/直觉），中英对照 |
 | `progress/error-log.md` | 误区/错误追踪表（格式见下） |

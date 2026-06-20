@@ -16,3 +16,15 @@
   std  = ways / ways.sum()            # 标准化为概率
   ```
 - ⚠️ 坑：似然(路径数)未必归一；归一后才是概率。别忘了 ÷总和。
+
+## 2.2 — Building a Model（globe tossing）
+- **场景**：抛地球仪估水比例 p；观测 `W L W W W L W L W`=6W3L（p41）。离散弹珠→连续 p，逻辑不变。
+- **data story**（p42）：独立+二值+同一 p ⟹ Binomial(N,p)。故事可丢、多对一——拟合好≠因果故事对。
+- **Bayesian updating**（p43–44）：均匀先验起，逐数据更新；见 W 峰右移、见 L 左移；越多越窄；**顺序无关**。
+- **逐步≡一次性**：逐次伯努利 `p^W(1-p)^L` 与二项 `C(N,W)p^W(1-p)^L` 只差常数 C(N,W)，归一化约掉 ⇒ 同后验。
+- Python：
+  ```python
+  post = prior * binom.pmf(W, N, grid)   # 一次性二项
+  post = post / post.sum()
+  ```
+- OJ 练习用 `tools/judge.py 学生实现 隐藏测试`。

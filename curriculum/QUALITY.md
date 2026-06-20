@@ -56,6 +56,32 @@
 - 纯概念/讨论题（无需计算）可不配代码，但要在题面写清"预期回答要点"，由 L3 审"答得对不对"。
 - Worked example 的代码若有数值声明（如"≈0.636"），也应让代码 `print` 出来或用 `assert` 自证。
 
+### C2. OJ（在线判题）形式 —— 计算练习的**首选**格式
+
+让学生真正动手"实现"而非"对答案"：老师定义**函数签名 + 输入/输出规范**，学生只写实现，老师用**隐藏测试集**判定。
+
+- **题面**给出函数签名与规范（可放学生 stub 文件 `materials/notebooks/ex_<id>.py`）。
+- **隐藏测试集** `materials/notebooks/tests/_<id>.py`：若干 assert，引用该函数名，覆盖正确性/边界/性质（如归一化、顺序无关、收敛）。
+- **参考解 + 自测**：chNN.md 内折叠块放参考实现 + 同一批断言（供 `check_chapter.py` L2 自证答案正确）。
+- **判题**：`python3 tools/judge.py <学生实现.py> <隐藏测试.py>`，全过 PASS / 否则 FAIL 并指出失败断言。
+
+格式（chNN.md 内）：
+````markdown
+- **练习 N.M-k（OJ）**：实现 `def f(...) -> ...`（输入/输出规范……）。判题：`tools/judge.py`。
+  <details><summary>参考解与隐藏测试</summary>
+
+  ```python
+  # solution+tests: ch2 ex 2.2A
+  import numpy as np
+  def f(...):            # 参考实现
+      ...
+  # --- 同一批断言（与 tests/_2.2A.py 一致）---
+  assert ...
+  ```
+  </details>
+````
+隐藏测试要先用参考解跑通（`judge.py 参考解 隐藏测试` = PASS）才能交给学生。
+
 ---
 
 ## D. 三层检验流程

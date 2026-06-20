@@ -2,10 +2,10 @@
 
 - **状态 Status**: active
 - **当前章 Chapter**: 2 — Small Worlds and Large Worlds
-- **当前小节 Section**: 2.1 已完成（next = 2.2）
-- **下一节课焦点 Next lesson focus**: §2.2 Building a model —— 从数弹珠过渡到 globe tossing 与连续参数 p
+- **当前小节 Section**: 2.2 已完成（next = 2.3）
+- **下一节课焦点 Next lesson focus**: §2.3 Components of the model —— 正式定义 likelihood/parameter/prior/posterior + Bayes 定理
 - **已生成章教案 Chapters prepared**: ch02
-- **待检查 homework**: 有（练习1加工厂先验 prior=[0,2,1,0]，看最可信猜想是否改变）
+- **待检查 homework**: 有（写逐次伯努利版 bayes_update_seq，用 np.allclose 验证与一次性二项版相同）
 - **上次复习 Last review**: 无
 - **学情画像 Learner profile**（2026-06-20 摸底）:
   - **数学**：微积分/线代生疏 → 教学重直觉+图+代码，少手推；必要推导才给，且讲清动机。
