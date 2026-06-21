@@ -18,3 +18,6 @@
 | MLE / MAP 关系 | MLE=似然峰=W/N；MAP=(似然×先验)峰；均匀先验时 MAP=MLE | 2.4 (p57) | 2026-06-20 |
 | 采样代积分 / sampling instead of integration | 从后验按权重抽样本；P(a≤p<b) = 样本比例，无需积分 | 3.1 (p65) | 2026-06-21 |
 | 自然频率 / natural frequencies | 把概率换成计数更直觉（100 阳性里 9 个真吸血鬼）；采样就是把后验变成"频率格式" | 3.1 (p62–63) | 2026-06-21 |
+| PI 百分位区间 / percentile interval | 两尾各留等量质量；直观但偏态时漏掉最可信值 | 3.2 (p69) | 2026-06-21 |
+| HPDI 最高后验密度区间 / highest posterior density interval | 含指定质量的最窄区间，总包含峰；滑动窗口实现 | 3.2 (p69–70) | 2026-06-21 |
+| 整条后验才是估计 / full posterior is the estimate | 区间只是摘要；换区间类型结论就变则直接画后验 | 3.2 (p70) | 2026-06-21 |
