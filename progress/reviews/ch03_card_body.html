@@ -1,0 +1,214 @@
+<h2>① 一图总览</h2>
+<div class="card">
+  <div class="flow">
+    <div class="box"><b>算后验</b><span>grid / quap / MCMC</span></div><div class="arrow">→</div>
+    <div class="box"><b>从后验采样</b><span>rng.choice(grid, p=posterior)</span></div><div class="arrow">→</div>
+    <div class="box"><b>汇总区间/点估计</b><span>PI · HPDI · median</span></div><div class="arrow">→</div>
+    <div class="box"><b>后验预测检查</b><span>rng.binomial(n, samples)</span></div>
+  </div>
+  <p class="muted small" style="margin:10px 0 0">第 3 章主旨：后验<b>算出来</b>只是开始，<b>用好它</b>才是本事——采样把积分变成数数，贯穿全书。</p>
+</div>
+
+<h2>② 数学思想与作者核心观点</h2>
+<div class="card">
+  <p class="muted small">McElreath 在本章反复强调的"为什么"，比算法更重要。每条可追溯原文。</p>
+
+  <div class="principle"><b>随机性是信息的属性，不是真实世界的属性</b> —
+    后验里的"随机抽样"是数学装置：参数在计算机里和抛硬币一样"经验"，
+    但现实世界的参数本身不随机。"随机性"只描述我们对它的无知。
+    <span class="src">§3.1, p63</span>
+  </div>
+
+  <div class="principle"><b>采样把积分变成数据汇总</b> —
+    区间 = 积分，对多参数模型极难。换成样本后，区间 = 数样本比例，
+    哪怕一个非数学家也能回答复杂的后验问题。这是本章的核心工程动机。
+    <span class="src">§3.1, p64</span>
+  </div>
+
+  <div class="principle"><b>提早学样本是为 MCMC 做准备</b> —
+    最强大的后验计算方法（MCMC，第 8 章）<b>只给样本，不给公式</b>。
+    现在学会处理样本，以后水到渠成。
+    <span class="src">§3.1, p64</span>
+  </div>
+
+  <div class="principle"><b>整条后验才是贝叶斯的估计</b> —
+    区间、点估计都只是摘要，不是估计本身。
+    "若换个区间类型结论就变，那就别用区间，直接画整条后验。"
+    <span class="src">§3.2, p70</span>
+  </div>
+
+  <div class="principle"><b>可信区间 ≠ 置信区间；95% 不意味着"95% 的时候含真值"</b> —
+    贝叶斯可信区间：P(p ∈ 区间 | 数据) = 0.95，概率属于参数。
+    频率派置信区间：重复实验 95% 的区间盖住真值，概率属于程序。
+    两者都不能说"95% 的时候含真值"——置信区间存在长期慢性过度自信（chronic overconfidence）。
+    <span class="src">§3.2, p71</span>
+  </div>
+
+  <div class="principle"><b>模型检查不是判断对错，而是看怎么失败</b> —
+    "所有模型都是错的"。PPC 的目标是理解模型<b>在哪个角度失败、失败得要不要紧</b>。
+    Golem 想象力很差——你必须主动换角度（游程、切换次数…），检验才有力度。
+    <span class="src">§3.3, p78–81</span>
+  </div>
+
+  <h3>关键数学思想</h3>
+  <ul>
+    <li><b>采样的数学本质</b>：rng.choice(grid, p=posterior) 让每个 grid 值按 posterior 权重出现，大样本时频率 → 密度。这是蒙特卡洛积分的最简形式：E[f(p)] ≈ (1/N)Σf(sample_i)。</li>
+    <li><b>HPDI 的最优性</b>：在所有含指定质量 q 的区间中，HPDI 是使区间宽度最小的那个。偏态时它总包含后验众数（MAP）。</li>
+    <li><b>后验预测 = 两层随机</b>：先从后验抽 p（参数不确定），再从 Binomial(n,p) 抽观测（观测不确定）。合并两层才是诚实预测；只用点估计会低估预测宽度。</li>
+    <li><b>Loss function 决定点估计</b>：绝对损失 |d-p| 最小化 → 中位数；平方损失 (d-p)² → 均值。点估计的选择是决策问题，不是统计问题。</li>
+  </ul>
+</div>
+
+<h2>③ 核心概念与公式</h2>
+<div class="card">
+  <div class="grid2">
+    <div class="vocab"><b>natural frequencies 自然频率</b> — 把概率换成计数更直觉（"1094 阳性里 95 真吸血鬼"）。采样正是把后验变成频率格式。<span class="src">§3.1, p62–63</span></div>
+    <div class="vocab"><b>sampling 采样</b> — rng.choice(grid, size=N, p=posterior)：每个 p 按后验权重出现，频率 ≈ 密度。</div>
+    <div class="vocab"><b>PI 百分位区间</b> — np.percentile(s, [lo%, hi%])，两尾等切；偏态时漏掉最可信值。<span class="src">§3.2, p69</span></div>
+    <div class="vocab"><b>HPDI 最高后验密度区间</b> — 含指定质量的最窄区间；滑动窗口：排序 → 枚举 x[i+w]-x[i] → 取最小。<span class="src">§3.2, p69–70</span></div>
+    <div class="vocab"><b>posterior predictive distribution 后验预测分布</b> — rng.binomial(n, samples)：对每个后验 p 模拟一次，合并两种不确定性。<span class="src">§3.3, p78–79</span></div>
+    <div class="vocab"><b>PPC 后验预测检查</b> — 换角度看数据（游程、切换次数…）；观测落分布尾部 = 模型该角度失败。<span class="src">§3.3, p77–81</span></div>
+  </div>
+  <div class="formula"><span class="big">P(a ≤ p &lt; b) = np.mean((samples &gt;= a) &amp; (samples &lt; b))</span></div>
+  <div class="formula"><span class="big">后验预测：ppc = rng.binomial(n, samples)　← 一行，含两层不确定性</span></div>
+</div>
+
+<h2>④ 关键可视化</h2>
+<div class="card">
+  <figure>
+    <img src="materials/figures/3.1_sampling.png" alt="后验采样三层图">
+    <figcaption>§3.1 采样三层图：① 后验密度曲线 → ② 按权重抽出的样本散点 → ③ 直方图还原密度。直观证明"频率 ≈ 后验密度"。</figcaption>
+  </figure>
+  <figure>
+    <img src="materials/figures/review_ch3_ppc.png" alt="AB测试PPC">
+    <figcaption>§3.3 AB 测试 PPC（35/200）：后验预测分布（紫色）vs 观测值 35（红线）。观测落在分布中央，模型局部靠谱。</figcaption>
+  </figure>
+</div>
+
+<h2>⑤ 方法 / 对比表</h2>
+<div class="card">
+  <table>
+    <tr><th>方法</th><th>定义</th><th>优点</th><th>缺点</th><th>适用</th></tr>
+    <tr>
+      <td><b>PI</b></td>
+      <td>两尾各留等量质量<br>np.percentile(s,[25,75])</td>
+      <td>直观、好沟通</td>
+      <td>偏态时漏最可信值</td>
+      <td>对称后验 / 向外行沟通</td>
+    </tr>
+    <tr>
+      <td><b>HPDI</b></td>
+      <td>含指定质量的最窄区间<br>滑动窗口</td>
+      <td>总含峰，偏态时更窄</td>
+      <td>计算贵、受众不熟</td>
+      <td>偏态后验 / 精确报告</td>
+    </tr>
+    <tr>
+      <td><b>点估计</b></td>
+      <td>MAP / 均值 / 中位数</td>
+      <td>简洁</td>
+      <td>丢失不确定性</td>
+      <td>需单一数字，先想 loss fn</td>
+    </tr>
+    <tr>
+      <td><b>整条后验</b></td>
+      <td>—</td>
+      <td>最完整</td>
+      <td>不好直接报告</td>
+      <td>换区间结论就变时</td>
+    </tr>
+  </table>
+</div>
+
+<h2>⑥ ★ 你的学习画像</h2>
+<div class="pill idea">
+  <h3>🌟 本章高光</h3>
+  <ul>
+    <li>三节 OJ 全通过（prob_between / hpdi / posterior_predictive），无一超过 2 次尝试</li>
+    <li>hpdi：自己先设计了"从 MAP 出发贪心扩展"算法，发现局限后主动接受滑动窗口——算法直觉强</li>
+    <li>主动追问 rng.choice 和 rng.binomial 的广播机制，不满足于"会用"</li>
+    <li>PPC"换角度检验"的直觉一次到位（切换次数落尾部 = 模型该角度失败）</li>
+    <li>复习 fix-this 三道全独立找出错误，无需提示</li>
+  </ul>
+</div>
+
+<div class="pill warn">
+  <h3>⚠️ 易错点（error-log active）</h3>
+  <table>
+    <tr><th>场景</th><th><span class="wrong">❌ 易错</span></th><th><span class="right">✅ 正确</span></th></tr>
+    <tr>
+      <td>avg_like 分母</td>
+      <td class="wrong">Σ(似然 × 参数值 p)</td>
+      <td class="right">Σ(似然 × 先验权重 prior(p))</td>
+    </tr>
+    <tr>
+      <td>区间之和 = 1</td>
+      <td class="wrong">采样误差相互抵消</td>
+      <td class="right">集合覆盖：无重叠无遗漏，精确 = 1</td>
+    </tr>
+    <tr>
+      <td>二次近似</td>
+      <td class="wrong">高斯 ≈ 二次多项式（直接近似后验）</td>
+      <td class="right">对数后验 ≈ 抛物线（泰勒）；高斯 ↔ 抛物线是对数精确关系</td>
+    </tr>
+    <tr>
+      <td>PPC 步骤 4</td>
+      <td class="wrong">模拟后加和求平均得一个数</td>
+      <td class="right">保留全部预测值，画分布，标观测值</td>
+    </tr>
+  </table>
+</div>
+
+<div class="pill warn">
+  <h3>🎯 待强化</h3>
+  <ul>
+    <li>可信区间措辞：脱口而出 "P(p ∈ 区间 | 数据) = 0.95"，不说"95% 的时候含真值"</li>
+    <li>prior(p) vs p 的区分——下章线性模型先验更复杂，注意别再混</li>
+  </ul>
+</div>
+
+<div class="pill good">
+  <h3>✅ 本章已攻克</h3>
+  <ul>
+    <li>采样代积分（natural frequencies 思想）</li>
+    <li>PI vs HPDI 定义、差异、偏态时选择</li>
+    <li>后验预测 = 两层不确定性（rng.binomial(n, samples) 一行实现）</li>
+    <li>PPC"换角度"检验逻辑</li>
+  </ul>
+</div>
+
+<h2>⑦ 速查卡</h2>
+<div class="card"><pre><span class="c"># §3.1 从后验采样</span>
+posterior = binom.pmf(W, N, p_grid); posterior /= posterior.sum()
+samples   = rng.choice(p_grid, size=10000, p=posterior)
+
+<span class="c"># §3.1 采样代积分</span>
+P_ab = np.mean((samples >= a) & (samples < b))
+
+<span class="c"># §3.2 PI（等尾）</span>
+PI90 = np.percentile(samples, [5, 95])
+
+<span class="c"># §3.2 HPDI（最窄，滑动窗口）</span>
+def hpdi(samples, prob=0.9):
+    x = np.sort(samples); n = len(x); w = int(np.floor(prob * n))
+    widths = x[w:] - x[:n-w]; i = np.argmin(widths)
+    return x[i], x[i+w]
+
+<span class="c"># §3.3 后验预测（诚实版，含参数不确定性）</span>
+ppc = rng.binomial(n_new, samples)   <span class="c"># 比点估计版更宽</span>
+
+<span class="c"># 点估计 loss function</span>
+median_est = np.median(samples)   <span class="c"># 绝对损失 |d-p|</span>
+mean_est   = samples.mean()       <span class="c"># 平方损失 (d-p)²</span>
+</pre></div>
+
+<h2>⑧ 下一步</h2>
+<div class="card">
+  <p>第 3 章完成 ✅　→　进入第 4 章 <b>Linear Models（线性模型）</b></p>
+  <p>生成第 4 章教案：<span class="kbd">/chapter 4</span></p>
+  <p style="margin-top:8px">进章前建议：</p>
+  <ul>
+    <li>跑书题 3E1–3E3（p82，set.seed(100) 样本三类区间概率）巩固 prob_between</li>
+    <li>error-log active 条目（prior(p) vs p）下章继续留意</li>
+  </ul>
+</div>
