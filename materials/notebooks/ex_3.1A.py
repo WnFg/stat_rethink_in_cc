@@ -10,5 +10,4 @@ def prob_between(samples, lo, hi):
     返回: 落在 [lo, hi) 的样本比例（0~1）
     提示：布尔条件 (samples>=lo) & (samples<hi) 取平均就是频率。
     """
-    # TODO: 你的实现
-    ...
+    return np.mean((samples >= lo) & (samples < hi))

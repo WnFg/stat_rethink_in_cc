@@ -58,3 +58,11 @@
   second = (neg(m+eps) - 2*neg(m) + neg(m-eps))/eps**2   # 曲率
   sd = 1/np.sqrt(second)
   ```
+
+## 3.1 — Sampling from a Grid-Approximate Posterior（从网格后验采样）
+- **本章主旨**：后验算出来只是开始；本章用采样把"积分问题"变成"数数问题"（p62）。
+- **采样一行**：`samples = rng.choice(p_grid, size=10000, p=posterior)` — 每个 p 按后验权重出现（p65）。
+- **数数代积分**：`P(lo ≤ p < hi) = np.mean((samples >= lo) & (samples < hi))`。
+- **直觉**：样本里各 p 的频率 ≈ 后验密度；大样本时误差 < 0.01（p66）。
+- **为什么早学**：MCMC（ch8）只给样本不给公式，提前掌握样本处理以后水到渠成（p64）。
+- **常见坑**：采样结果与网格解不需要精确相等，有随机波动是正常的。
