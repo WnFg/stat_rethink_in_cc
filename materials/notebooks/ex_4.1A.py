@@ -11,5 +11,6 @@ import numpy as np
 
 
 def gaussian_by_addition(n_steps, n_people=10000, seed=42):
-    # TODO: 请在这里实现
-    raise NotImplementedError
+    rng = np.random.default_rng(seed)
+    steps = rng.uniform(-1, 1, (n_people, n_steps))  # shape: (n_people, n_steps)
+    return steps.sum(axis=1)                          # 每人的步长求和 → shape: (n_people,)

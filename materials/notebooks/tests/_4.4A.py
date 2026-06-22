@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 import os
-from ex_4_4A import fit_linear_map
+# fit_linear_map 来自学生实现（judge.py 拼接）
 
 DATA_PATH = 'materials/data/Howell1.csv'
 d = pd.read_csv(DATA_PATH, sep=';')

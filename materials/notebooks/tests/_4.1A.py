@@ -1,7 +1,7 @@
-"""隐藏测试：ch4 ex 4.1A — gaussian_by_addition"""
+# 隐藏测试：ch4 ex 4.1A — gaussian_by_addition（学生勿看）
 import numpy as np
 from scipy import stats as sp_stats
-from ex_4_1A import gaussian_by_addition  # 学生实现
+# gaussian_by_addition 来自学生实现（judge.py 拼接，已在作用域中）
 
 pos_4  = gaussian_by_addition(4)
 pos_16 = gaussian_by_addition(16)

@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 import os
-from ex_4_3A import height_posterior
+# height_posterior 来自学生实现（judge.py 拼接）
 
 # 加载数据
 DATA_PATH = 'materials/data/Howell1.csv'
