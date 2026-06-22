@@ -2,8 +2,8 @@
 
 - **状态 Status**: active
 - **当前章 Chapter**: 4 — Linear Models
-- **当前小节 Section**: §4.1 已完成，§4.2 待开始
-- **下一节课焦点 Next lesson focus**: /lesson 开始 §4.2 A Language for Describing Models（模型规范语言）
+- **当前小节 Section**: §4.2 已完成，§4.3 待开始
+- **下一节课焦点 Next lesson focus**: /lesson 开始 §4.3 A Gaussian Model of Height（双参数网格近似）
 - **已生成章教案 Chapters prepared**: ch02, ch03, ch04（均过 L1+L2+L3 质检）
 - **上次复习 Last review**: 第 3 章 2026-06-21（reviews/ch03.md）
 - **待检查 homework**: 无
