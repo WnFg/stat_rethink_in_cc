@@ -36,3 +36,8 @@
 | 数值稳定技巧 / log-sum-exp trick | log_post -= log_post.max() 再 exp，防止 exp(-4000)=0 下溢 | 4.3 (p96–97) | 2026-06-26 |
 | 广播 log 似然 / broadcast log-likelihood | heights[:,None,None] × MU[None] → (352,n,n)，sum(axis=0) → (n,n)，一次性算所有格点 | 4.3 (p96–97) | 2026-06-26 |
 | MAP 二次近似 / quadratic approximation | 爬山找后验峰（MAP）；在峰附近对数后验≈抛物线→高斯近似；Hessian 逆=协方差 | 4.3 (p99) | 2026-06-26 |
+| Hessian 矩阵 / Hessian matrix | 2D 参数空间各方向二阶导数的压缩编码；对角线=轴向曲率，非对角线=混合偏导（参数相关性） | 4.3 (p99) | 2026-06-27 |
+| 混合二阶偏导 / mixed partial derivative | ∂²f/∂μ∂σ：μ 方向斜率随 σ 变化的速率；=0 ↔ 等高线轴对齐 ↔ 参数后验不相关 | 4.3 (p99) | 2026-06-27 |
+| MAP 不需积分 / MAP avoids integration | 分母 P(data)=∫like·prior dθ 对所有 θ 是常数，argmax 时直接扔掉；对比 grid 需 /=post.sum() | 4.3 (p99) | 2026-06-27 |
+| log 参数化 + delta method | log_sigma 让优化器无约束；SE(σ)=SE(log_σ)×σ（delta method）；采样后 exp 还原 | 4.3 (p99-103) | 2026-06-27 |
+| 多维后验采样 / multivariate posterior sampling | multivariate_normal(MAP, cov, size=n) → (μ,log_σ) 样本，exp 还原 σ；列 0=μ，列 1=σ | 4.3 (p102-103) | 2026-06-27 |

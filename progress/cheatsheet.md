@@ -112,3 +112,15 @@
 - **log_sigma 参数化**：用 `log_sigma` 而非 `sigma` 作优化变量，确保 σ>0（`sigma=exp(log_sigma)`）。
 - **坑 1**：`heights[n,n]` 不对，应是 `heights[:,None,None]`——None 插维度，整数是索引。
 - **坑 2**：`np.where(SIGMA,...)` 不对，需布尔条件 `(SIGMA>0)&(SIGMA<=50)`。
+
+## 4.3b — MAP 完整版：Hessian 协方差 + 多维后验采样（§4.3.5–4.3.6, p99–103）
+- **MAP 为什么不用积分**：Bayes 分母 P(data) 对所有 θ 是常数，argmax 时直接扔；只 maximize 分子。
+- **Hessian 直觉**：2D 参数空间里各方向二阶导的压缩；对角线=轴向曲率，非对角线=混合偏导（参数相关性）。
+- **混合偏导 ∂²f/∂μ∂σ**："μ 方向斜率随 σ 变化有多快"；=0 ↔ 等高线轴对齐 ↔ 后验不相关。
+- **v^T H v 是二阶方向导数**，不是几何曲率；在 MAP 处（一阶=0）决定 f 沿方向 v 的下降速率。
+- **协方差 = H 的逆**：H 是 neg_log_post 的 Hessian（最小值处正定），cov = inv(H)。
+- **四点差分 Hessian**：`H[i,j] = (f(++)-f(+-)-f(-+)+f(--)) / (4·eps²)`，eps=1e-4。
+- **delta method**：SE(σ) = SE(log_σ) × σ（因为 ∂σ/∂log_σ = σ）。
+- **采样流程**：`samp_log = rng.multivariate_normal(res.x, cov_log, n)` → `exp` 还原 σ → `column_stack`。
+- **结果（p100）**：mu=154.61±0.41 cm，sigma=7.73±0.29 cm（352 名成人，均匀先验下 MAP≈MLE）。
+- **坑**：测试文件放 `materials/notebooks/tests/`，judge.py 拼接后直接调函数，不要用 importlib。
