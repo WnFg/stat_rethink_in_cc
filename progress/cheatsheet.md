@@ -124,3 +124,6 @@
 - **采样流程**：`samp_log = rng.multivariate_normal(res.x, cov_log, n)` → `exp` 还原 σ → `column_stack`。
 - **结果（p100）**：mu=154.61±0.41 cm，sigma=7.73±0.29 cm（352 名成人，均匀先验下 MAP≈MLE）。
 - **坑**：测试文件放 `materials/notebooks/tests/`，judge.py 拼接后直接调函数，不要用 importlib。
+- **BFGS（quasi-Newton）**：每步用 (s=位移, y=梯度变化) 更新 Hessian 近似 B；方向=-B×∇f；停止条件=||∇f||<gtol(默认1e-5)；内层 Wolfe 线搜索定步长。
+- **为什么不用网格**：n 参数需 k^n 格点，维度诅咒；10 参数=10^20 格点不可行；BFGS 爬山步数线性增长。
+- **三引擎定位**：Grid(1-3参数,教学) → quap/MAP(几十参数,后验≈高斯) → MCMC(任意维度任意形状,第8章)。
