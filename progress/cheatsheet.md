@@ -99,3 +99,16 @@
 - **先验预测**：`μ_s ~ prior; σ_s ~ prior; yi = rng.normal(μ_s, σ_s)` → 检验先验合理性（p95–96）。
 - **下标 i**：`μi = α + β·xi`——明确每行有自己的均值；σ 无下标=同方差假设。
 - **坑**：`μi =` 用等号不用波浪号——μ 由参数完全决定，没有自己的分布。
+
+## 4.3 — A Gaussian Model of Height（双参数网格近似 + MAP 二次近似）
+- **模型**：`hi ~ Normal(μ,σ)` / `μ ~ Normal(178,20)` / `σ ~ Uniform(0,50)`（§4.3, p92–103）。
+- **联合后验**：`Pr(μ,σ|h) ∝ ∏ Normal(hi|μ,σ) × Normal(μ|178,20) × Uniform(σ|0,50)`。
+- **网格近似 5 步**：linspace+meshgrid → 广播 log_lik → +log_prior → 数值稳定 → exp+归一化。
+- **广播关键**：`heights[:,None,None]` (352,1,1) × `MU[None]` (1,n,n) → (352,n,n)，`sum(axis=0)` → (n,n)。
+- **数值稳定**：`log_post -= log_post.max()`，防止 exp(-4000)=0 下溢。
+- **归一化 = 除以平均似然**：`post /= post.sum()` 等价于 Bayes 分母 Σ[likelihood×prior]。
+- **MAP 结果**（p100）：μ≈154.61 cm，σ≈7.73 cm（352 名成人）。
+- **MAP 二次近似**：`minimize(neg_log_post, x0, method='BFGS')` 找峰；Hessian 的逆 = 后验协方差。
+- **log_sigma 参数化**：用 `log_sigma` 而非 `sigma` 作优化变量，确保 σ>0（`sigma=exp(log_sigma)`）。
+- **坑 1**：`heights[n,n]` 不对，应是 `heights[:,None,None]`——None 插维度，整数是索引。
+- **坑 2**：`np.where(SIGMA,...)` 不对，需布尔条件 `(SIGMA>0)&(SIGMA<=50)`。

@@ -32,3 +32,7 @@
 | 模型规范语言 / model specification language | ~ = 随机关系（分布）；= = 确定关系（函数）；第一行likelihood，其余prior | 4.2 (p90–91) | 2026-06-22 |
 | 先验预测检查 / prior predictive check | 看数据前先从先验模拟yi，检验先验强弱是否合理 | 4.2 (p95–96) | 2026-06-22 |
 | 下标 i / individual index | μi = α + β·xi 表示每个体有自己的均值；σ 无下标=共享方差 | 4.2 (p105) | 2026-06-22 |
+| 联合后验 / joint posterior | Pr(μ,σ|data)：(μ,σ)联合分布，对应"无数条可能的高斯"；热力图可视化 | 4.3 (p92) | 2026-06-26 |
+| 数值稳定技巧 / log-sum-exp trick | log_post -= log_post.max() 再 exp，防止 exp(-4000)=0 下溢 | 4.3 (p96–97) | 2026-06-26 |
+| 广播 log 似然 / broadcast log-likelihood | heights[:,None,None] × MU[None] → (352,n,n)，sum(axis=0) → (n,n)，一次性算所有格点 | 4.3 (p96–97) | 2026-06-26 |
+| MAP 二次近似 / quadratic approximation | 爬山找后验峰（MAP）；在峰附近对数后验≈抛物线→高斯近似；Hessian 逆=协方差 | 4.3 (p99) | 2026-06-26 |
