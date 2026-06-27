@@ -1,0 +1,167 @@
+<!-- 第1章 The Golem of Prague 复习卡 body — 2026-06-27 -->
+
+<h2>① 一图总览</h2>
+<div class="card">
+  <div class="flow">
+    <div class="box"><b>Golem 比喻</b><span>统计模型 = 有力量但无智慧的黏土机器人；会严格执行指令、不会判断场景</span></div>
+    <div class="arrow">→</div>
+    <div class="box"><b>H ≠ P ≠ M</b><span>假设 / 过程模型 / 统计模型三层各自独立，关系是多对多</span></div>
+    <div class="arrow">→</div>
+    <div class="box"><b>演绎证伪不可能</b><span>H→P→M 两次有损映射，模型结果无法反推回假设</span></div>
+    <div class="arrow">→</div>
+    <div class="box"><b>三种工具</b><span>贝叶斯分析 · 多层模型 · 信息准则</span></div>
+  </div>
+  <p class="muted small" style="margin:10px 0 0">核心立场：统计模型是工程工具，不是真理探针；科学进步靠模型的比较与批判，而非假设的演绎证伪。</p>
+</div>
+
+<h2>② 数学思想与作者核心观点</h2>
+<div class="card">
+  <p class="muted small">第1章是整本书的认识论基础——比任何公式都重要，每条可追溯原文。</p>
+
+  <div class="principle">
+    <b>统计模型是 Golem（黏土机器人）</b> — "Scientific models are neither true nor false, neither prophets nor charlatans. Rather they are constructs engineered for some purpose… powerful clay robots without intent of their own." 模型严格执行指令但没有判断力——给错指令或遇到意外，golem 就会伤害创造者。统计模型的威力与危险同样来源于此。
+    <span class="src">§1.1, p14–16</span>
+  </div>
+
+  <div class="principle">
+    <b>假设 (H) 不等于模型 (M)——核心认识论事实</b> — "Hypotheses are not models. The relations among hypotheses and different kinds of models are complex. Many models correspond to the same hypothesis, and many hypotheses correspond to a single model. This makes strict falsification impossible." 三层（H / P / M）之间是多对多映射，而非一对一。
+    <span class="src">§1.2.1, p17–20</span>
+  </div>
+
+  <div class="principle">
+    <b>H → P：假设是模糊的，过程模型是精确的</b> — "These hypotheses have vague boundaries, because they begin as verbal conjectures, not precise models. There are thousands of possible detailed processes that can be described as 'neutral,' depending upon choices about population structure, number of sites, mutation rates, and recombination." 从 H 到 P 的过渡，是把语言声明里所有未指定的机制细节逐一显式填充——填充方式有多种，所以一个 H 对应多个 P。
+    <span class="src">§1.2.1, p18</span>
+  </div>
+
+  <div class="principle">
+    <b>P → M：最大熵让不同机制收敛到相同分布</b> — "One reason that statistical models routinely correspond to many different detailed process models is because they rely upon distributions like the normal, binomial, Poisson… These are maximum entropy distributions. Nature loves them… One can no more infer evolutionary process from a power law than one can infer developmental process from the fact that height is normally distributed." P→M 的多对一不只是"描述不清"，而是数学定理层面的不可区分性——最大熵分布是许多机制的共同终点。
+    <span class="src">§1.2.1 Rethinking, p20</span>
+  </div>
+
+  <div class="principle">
+    <b>演绎证伪（modus tollens）在科学中几乎不可行</b> — 两个原因：① H→P→M 多对多，拒绝 M 不能推出拒绝 H（逻辑链断裂）；② 测量有误差，"黑天鹅"可能是测量错误而非真实反例（中微子超光速事件最终是松动的线缆）。"Falsification is always consensual, not logical."
+    <span class="src">§1.2.1–1.2.3, p17–23</span>
+  </div>
+
+  <div class="principle">
+    <b>贝叶斯概率 vs 频率派概率</b> — 贝叶斯："用概率描述任何类型的不确定（包括参数）"，无需设想重复实验。频率派："概率只属于可重复事件的频率"，参数无概率。土星望远镜案例说明：测量本身确定（无随机性），频率派无从出发，贝叶斯正常运行。两者都依赖假设，只是假设的位置不同。
+    <span class="src">§1.3.1, p23–25</span>
+  </div>
+
+  <h3>关键数学思想</h3>
+  <ul>
+    <li><b>三层压缩 + 两次信息丢失</b>：H（语言）→ P（机制）→ M（分布）。第一次丢失：把语言模糊性填充为具体假设时选了其中一种；第二次丢失：最大熵让不同机制产生相同分布。两次丢失后，统计检验的结果不能沿原路反推回原始假设。</li>
+    <li><b>后果：模型比较优于假设检验</b>：既然 M 对应多个 H，正确姿势是"明确列出多个过程模型，比较它们的预测"，而非"拒绝/接受零假设"。书的其余部分都在教你怎么做到这一点。</li>
+  </ul>
+</div>
+
+<h2>③ 核心概念与公式</h2>
+<div class="card">
+  <div class="grid2">
+    <div class="vocab"><b>Golem / 统计模型</b> — 有力量（严格执行计算）但无智慧（不判断场景合适与否）的工程构件。威力与危险并存。<br><span class="src">§1.1, p14</span></div>
+    <div class="vocab"><b>Hypothesis H 假设</b> — 模糊的语言声明 / 语言猜想，有"vague boundaries"，不能直接与数据比较。需要先具体化为 P。<br><span class="src">§1.2.1, p18</span></div>
+    <div class="vocab"><b>Process Model P 过程模型</b> — 对 H 的一种精确机制规范：明确所有参数、结构假设、生成逻辑。同一 H 的不同细节选择 = 不同 P。<br><span class="src">§1.2.1, p18</span></div>
+    <div class="vocab"><b>Statistical Model M 统计模型</b> — 从 P 推导出的数据分布预测（如幂律、正态）。最大熵使不同 P 常产生相同 M，是信息损失最严重的一步。<br><span class="src">§1.2.1, p19–20</span></div>
+    <div class="vocab"><b>Maximum Entropy 最大熵</b> — 指数族分布（正态、二项、泊松…）是"自然界偏爱"的分布，因为它们是"仅知有限约束时最保守的选择"，也因此是多种不同机制的共同极限。<br><span class="src">§1.2.1 Rethinking, p20</span></div>
+    <div class="vocab"><b>Modus tollens 演绎证伪</b> — "H 真 → D 出现；D 没有出现 → H 假"。在科学中几乎不可用：① H→M 多对多破坏逻辑链；② 测量误差破坏"D 没有出现"的确定性。<br><span class="src">§1.2.2, p21</span></div>
+    <div class="vocab"><b>三种工具</b> — ① 贝叶斯数据分析（本书主线）；② 多层模型（Ch.12–14）；③ 信息准则模型比较（Ch.6）。三者深度关联，共同服务于模型工程而非假设检验。<br><span class="src">§1.3, p23</span></div>
+    <div class="vocab"><b>Small world vs Large world</b> — 模型只在"小世界"（自身假设下）最优；它在"大世界"（真实世界）的表现只能事后检验，无法逻辑推出。<br><span class="src">§引言, p32（第2章开头回顾）</span></div>
+  </div>
+
+  <div class="formula">
+    <span class="big">H（模糊）→ P（精确机制）→ M（分布预测）</span><br>
+    每步都是多对多：同一 H 对应多个 P；同一 M 对应多个 P，也对应多个 H<br><br>
+    <span class="big">拒绝 M ≠ 拒绝 P ≠ 拒绝 H</span><br>
+    因为 M 对应多个 P 和 H，逻辑链在两个方向都断裂
+  </div>
+</div>
+
+<h2>④ 关键可视化</h2>
+<div class="card">
+  <figure>
+    <img src="materials/figures/ch1_hpm_diagram.png" alt="H→P→M 多对多关系图">
+    <figcaption>Figure 1.2 重现（§1.2.1, p19）：假设 H（蓝/紫）→ 过程模型 P → 统计模型 M。
+    橙色箭头标出关键问题：P0A（中性稳态）和 P1B（波动选择）都产生 MII（幂律分布）——完全不同的生物学机制，统计上不可区分。</figcaption>
+  </figure>
+</div>
+
+<h2>⑤ 对比表</h2>
+<div class="card">
+  <table>
+    <tr><th></th><th>Hypothesis H</th><th>Process Model P</th><th>Statistical Model M</th></tr>
+    <tr><td><b>形式</b></td><td>语言声明（模糊）</td><td>精确的机制规范</td><td>数学分布 / 检验统计量</td></tr>
+    <tr><td><b>例子</b></td><td>"进化是中性的"</td><td>P0A: 中性、稳态种群（固定参数）</td><td>MII: 幂律分布</td></tr>
+    <tr><td><b>从上层过渡</b></td><td>—</td><td>填充 H 里未指定的所有机制细节</td><td>推导 P 在可观测量上的分布预测</td></tr>
+    <tr><td><b>对应关系</b></td><td>1 H → 多个 P</td><td>多个 P → 同一 M（最大熵）</td><td>1 M ← 多个 P ← 多个 H</td></tr>
+    <tr><td><b>能否反推</b></td><td colspan="3">❌ 拒绝 M 不能推出拒绝 P，也不能推出拒绝 H——信息在两步中不可逆地丢失</td></tr>
+  </table>
+  <br>
+  <table>
+    <tr><th>贝叶斯概率</th><th>频率派概率</th></tr>
+    <tr><td>概率描述任何类型的不确定（参数可有概率分布）</td><td>概率只属于可重复事件的频率；参数无概率分布</td></tr>
+    <tr><td>Saturn 望远镜问题：测量确定（无随机性），可照常推断</td><td>无法出发——没有"重复采样"的概念</td></tr>
+    <tr><td>假设：概率是认知状态的描述</td><td>假设：概率是客观频率的极限</td></tr>
+  </table>
+</div>
+
+<h2>⑥ ★ 你的学习画像</h2>
+
+<div class="pill idea">
+  <h3>🌟 高光与兴趣</h3>
+  <ul>
+    <li>主动追问 H → P 多对多的根本原因，推到"语言声明的模糊性 + 最大熵数学定理"两层——这是本书认识论核心，很少有学生主动到这个深度</li>
+    <li>认识到这些认识论知识"对理解统计学很重要"——与 McElreath 的立意完全吻合</li>
+    <li>本章内容在正式上课之前就通过追问自然覆盖，体现了主动构建知识框架的能力</li>
+  </ul>
+</div>
+
+<div class="pill warn">
+  <h3>⚠️ 待强化</h3>
+  <ul>
+    <li>第1章没有系统上过课——Golem 比喻、三工具（多层模型、信息准则）等还没正式讲解</li>
+    <li>Maximum entropy 的数学含义（为什么自然界"偏爱"指数族分布）在第9章会深入，现在知道结论即可</li>
+  </ul>
+</div>
+
+<div class="pill good">
+  <h3>✅ 已理解（通过追问）</h3>
+  <ul>
+    <li>H→P 多对多：假设是语言声明，精确化需要填充所有未指定的机制细节，填法不止一种</li>
+    <li>P→M 多对多：最大熵，不同机制产生相同分布形式，数学层面不可区分</li>
+    <li>逻辑后果：统计检验结果无法沿原路反推回假设，演绎证伪不可行</li>
+    <li>第2章的"data story 多对一"是本章 H→P→M 结构在 globe tossing 场景下的特例</li>
+  </ul>
+</div>
+
+<h2>⑦ 速查卡</h2>
+<div class="card">
+<pre><span class="c"># 三层关系速记</span>
+H  = "模糊语言声明"          <span class="c"># 例：'进化是中性的'</span>
+P  = "H + 所有机制细节"      <span class="c"># 例：指定种群大小/突变率/位点数...</span>
+M  = "P 推导出的分布预测"    <span class="c"># 例：等位基因频率服从幂律分布</span>
+
+<span class="c"># 关系</span>
+H → 多个P    <span class="c"># 同一假设，不同机制细节选择 = 不同过程模型</span>
+多P → 同一M  <span class="c"># 最大熵：P0A 和 P1B 都产生幂律（MII）</span>
+多P → 同一H  <span class="c"># P0A 和 P0B 都是"中性进化"的一种</span>
+
+<span class="c"># 后果</span>
+拒绝 M  →  不能推出 拒绝 P  →  不能推出 拒绝 H
+         (因为其他 P 也对应同一 M)  (因为其他 H 也对应同一 P)
+
+<span class="c"># 正确姿势（§1.3 三工具的动机）</span>
+# 不要 "NHST 检验零假设"
+# 要 "显式建立多个过程模型，比较它们的预测"</pre>
+</div>
+
+<h2>⑧ 下一步</h2>
+<div class="card">
+  <p>第1章是认识论序章。全书其余部分在教你怎么做"好的 golem 工程师"：</p>
+  <ul>
+    <li>第2章（已学）：贝叶斯推断的机制（数路径 → 后验）</li>
+    <li>第6章：信息准则做模型比较（对应工具③）</li>
+    <li>第9章：最大熵的数学原理（为什么自然界偏爱指数族分布）</li>
+    <li>第12–14章：多层模型（对应工具②）</li>
+  </ul>
+  <p class="small muted" style="margin:6px 0 0">第1章没有 OJ 练习——它的价值是建立"为什么要用贝叶斯 + 模型比较"的认识论基础，带着这个框架读全书效果更好。</p>
+</div>
