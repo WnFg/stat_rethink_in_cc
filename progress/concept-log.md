@@ -41,3 +41,8 @@
 | MAP 不需积分 / MAP avoids integration | 分母 P(data)=∫like·prior dθ 对所有 θ 是常数，argmax 时直接扔掉；对比 grid 需 /=post.sum() | 4.3 (p99) | 2026-06-27 |
 | log 参数化 + delta method | log_sigma 让优化器无约束；SE(σ)=SE(log_σ)×σ（delta method）；采样后 exp 还原 | 4.3 (p99-103) | 2026-06-27 |
 | 多维后验采样 / multivariate posterior sampling | multivariate_normal(MAP, cov, size=n) → (μ,log_σ) 样本，exp 还原 σ；列 0=μ，列 1=σ | 4.3 (p102-103) | 2026-06-27 |
+| 线性模型策略 / linear model strategy | μ_i=α+β·x_i（=号，确定关系）；先验只加参数(α,β,σ)；μ_i 不是随机变量 | 4.4 (p105-107) | 2026-06-27 |
+| 截距α/斜率β intercept/slope | α=x=0时期望y（可能无意义）；β=x增1单位y期望增β；中心化后α=均值x处的期望y | 4.4 (p107,112) | 2026-06-27 |
+| 中心化 centering | x_c=x-mean(x)；使α可解释；消除α-β后验高度负相关，数值更稳 | 4.4 (p112-113) | 2026-06-27 |
+| 后验=直线分布 / posterior over lines | 每对(α,β)定一条直线；后验给每条直线可信度权重；20条采样线可视化不确定性 | 4.4 (p113-116) | 2026-06-27 |
+| 两类不确定性 / two kinds of uncertainty | 均值HPDI=参数不确定（α,β的后验）；预测PI=参数+观测(σ)；PI远宽于HPDI | 4.4 (p115-122) | 2026-06-27 |

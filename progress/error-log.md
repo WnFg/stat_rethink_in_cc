@@ -13,3 +13,4 @@ status：`active` → `reviewing`（2 周无复发）→ `mastered`（再 2 周�
 | 2026-06-22 | gaussian_by_addition 返回步长矩阵 (n_people, n_steps) | 还需 .sum(axis=1) 将每人步长求和，返回位置数组 (n_people,) | code-bug | 1 | active |
 | 2026-06-26 | 广播变形：heights[n, n]（整数索引） | heights[:, None, None]（None 插入新维度，不是索引）→ shape (352,1,1) | code-bug | 1 | active |
 | 2026-06-26 | np.where(SIGMA, 0.0, -inf)（变量名作条件） | np.where((SIGMA > 0) & (SIGMA <= 50), 0.0, -np.inf)（需布尔表达式） | code-bug | 1 | active |
+| 2026-06-27 | neg_log_post 里加"负对数 height_mu" | μ_i = α+β·w 是确定值（用=），无自己的先验；先验只加参数 α、β、σ | misconception | 1 | active |
