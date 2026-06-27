@@ -139,3 +139,12 @@
 - **采样计算均值HPDI**：`mu_mat = a_samp[:,None] + b_samp[:,None]*w_seq[None,:]`，`percentile(mu_mat,[5.5,94.5],axis=0)`。
 - **采样计算预测PI**：`h_sim = rng.normal(mu_mat, sigma_samp[:,None])`，`percentile(h_sim,[5.5,94.5],axis=0)`。
 - **坑**：`μ_i` 用等号不用波浪号；先验别误写到 μ_i 上；预测PI务必包含 σ 才完整。
+
+## 4.5 — Polynomial Regression（多项式回归，§4.5, p123–127）
+- **模型**：`ws=(w-mean)/std`；`mu_i=a+b1*ws+b2*ws²`；参数 (a,b1,b2,log_sigma)。
+- **标准化两个理由**：① 避免 w² 数值爆炸（catastrophic cancellation + 条件数）；② β 可解释为"每增 1SD 对应的变化"，多变量时可横向比较。
+- **条件数**：原始 w² 时 kappa~10⁷（细长山谷，zigzag）；标准化后 kappa~1（圆形，快速收敛）。
+- **MAP 结果（全544人，p125）**：a≈146.66，b1≈21.40，b2≈-8.42（负=开口向下），sigma≈5.75。
+- **b2<0 的直觉**：轻时每 kg 长高多（线性段陡）；重时增速放缓（抛物线变平）。
+- **警告（p123）**：多项式是 geocentric 描述工具，拟合好≠解释正确；勿沉迷。
+- **坑**：标准化用传入数据自身的 mean/std，不要硬编码；x0 初始值要在合理范围内。

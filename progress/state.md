@@ -2,8 +2,8 @@
 
 - **状态 Status**: active
 - **当前章 Chapter**: 4 — Linear Models
-- **当前小节 Section**: §4.4 PASS ✅ 线性回归 MAP + 两类不确定性可视化
-- **下一节课焦点 Next lesson focus**: §4.5 多项式回归——weight² 拟合儿童+成人弯曲身高曲线；标准化
+- **当前小节 Section**: §4.5 PASS ✅ 多项式回归 + 标准化完整版
+- **下一节课焦点 Next lesson focus**: /review 第4章——章末复习 + fix-this 练习
 - **已生成章教案 Chapters prepared**: ch02, ch03, ch04（均过 L1+L2+L3 质检）
 - **上次复习 Last review**: 第 3 章 2026-06-21（reviews/ch03.md）
 - **待检查 homework**:
