@@ -1,0 +1,203 @@
+<!-- 第4章 Linear Models 复习卡 body — 2026-06-27 -->
+
+<h2>① 一图总览</h2>
+<div class="card">
+  <div class="flow">
+    <div class="box"><b>§4.1</b><span>CLT：大量加法<br>→ 正态涌现</span></div><div class="arrow">→</div>
+    <div class="box"><b>§4.2</b><span>模型规范语言<br>~ 与 =</span></div><div class="arrow">→</div>
+    <div class="box"><b>§4.3a</b><span>双参数网格近似<br>联合后验</span></div><div class="arrow">→</div>
+    <div class="box"><b>§4.3b</b><span>MAP + Hessian<br>→ 后验采样</span></div><div class="arrow">→</div>
+    <div class="box"><b>§4.4</b><span>线性回归<br>μ_i = α + β·x</span></div><div class="arrow">→</div>
+    <div class="box"><b>§4.5</b><span>多项式回归<br>+ 标准化</span></div>
+  </div>
+  <p class="muted small" style="margin:10px 0 0">核心升级：从"估计一个参数"到"用预测变量建回归模型"，始终沿用 posterior ∝ likelihood × prior。</p>
+</div>
+
+<h2>② 数学思想与作者核心观点</h2>
+<div class="card">
+  <p class="muted small">McElreath 在第4章想让你接受的比公式更重要的"为什么"——每条可追溯原文。</p>
+
+  <div class="principle">
+    <b>线性模型是地心模型（Geocentric Model）</b> — "Linear regression is the geocentric model of applied statistics… it can usefully describe a very large variety of natural phenomena… if we read its structure too literally, we're likely to make mistakes." 描述有用，解释危险；拟合好不等于因果对。
+    <span class="src">§4.0, p84</span>
+  </div>
+
+  <div class="principle">
+    <b>高斯的两类辩护</b> — 本体论（ontological）：物理加法机制产生高斯（CLT）；认识论（epistemological）：仅知均值/方差时，高斯是最大熵、最保守的选择。两种理由都合法，适用场景不同。
+    <span class="src">§4.1.4, p88–89</span>
+  </div>
+
+  <div class="principle">
+    <b>先验是模型的一部分，不是负担</b> — "There is no more a uniquely correct prior than there is a uniquely correct likelihood." 先验编码看数据前的知识状态；选先验就是做模型决策，应当讨论和探索，而非回避。
+    <span class="src">§4.4.1.2, p108</span>
+  </div>
+
+  <div class="principle">
+    <b>i.i.d. 是认识论假设，不是本体论声明</b> — "not a claim that these people are actually independent… It is instead an epistemological assumption." 独立同分布是"对相关性一无所知"的保守表达，不是对世界的断言。违反不一定有大问题，但要清楚自己在做什么。
+    <span class="src">§4.3.2, p94</span>
+  </div>
+
+  <div class="principle">
+    <b>多项式：用之有益，信之危险</b> — "We should feel embarrassed to use them, just so we don't become satisfied with the phenomenological explanations they provide." 多项式是地心模型的极致：拟合能力强但解释危险，且外推失控。Better would be a mechanistic model with theoretical grounding.
+    <span class="src">§4.5, p123–125</span>
+  </div>
+
+  <h3>关键数学思想</h3>
+  <ul>
+    <li><b>对数后验 ≈ 抛物线，高斯的对数精确等于抛物线</b>：MAP 二次近似的核心——对数后验在峰附近做二阶泰勒展开得抛物线（这步是近似），而高斯的对数本身就精确是抛物线，所以高斯近似后验本身。近似对象是对数后验，不是高斯函数。</li>
+    <li><b>Hessian = 多维曲率的压缩编码</b>：1D 时 σ² = 1/|f''|；2D 时 Hessian 的逆 = 协方差矩阵。混合偏导 ≠ 0 ↔ 等高线倾斜 ↔ 参数后验相关。</li>
+    <li><b>MAP 跳过积分的形式理由</b>：分母 P(data) 对所有 θ 是常数，argmax 时直接丢弃；预测变量的先验 P(x) 也因同理自动消去（只要 P(x) 不含模型参数）。</li>
+    <li><b>标准化让优化地形条件数趋 1</b>：不标准化时 w² 可达 3600，Hessian 条件数 κ ≈ 10⁷，导致 catastrophic cancellation + zigzag 收敛；标准化后 ws² 约 0–4，κ ≈ 1，BFGS 快速收敛。</li>
+  </ul>
+</div>
+
+<h2>③ 核心概念与公式</h2>
+<div class="card">
+  <div class="grid2">
+    <div class="vocab"><b>CLT intuition</b> — 大量独立随机量相加，波动互相抵消，落在均值的路径最多 → 钟形。与分叉路径花园同构（"最多路径"）。<br><span class="src">§4.1.1, p85–87</span></div>
+    <div class="vocab"><b>模型规范语言</b> — <code>~</code> 随机关系（服从分布）；<code>=</code> 确定关系（由其他量完全决定）。μ_i = α+β·x 用等号，μ_i 无先验。<br><span class="src">§4.2, p90–91</span></div>
+    <div class="vocab"><b>联合后验 joint posterior</b> — Pr(μ,σ|h)：(μ,σ) 的联合分布，对应无数条可能的高斯分布。热力图可视化峰位与形状。<br><span class="src">§4.3.2, p92</span></div>
+    <div class="vocab"><b>MAP 二次近似 quap</b> — minimize(neg_log_post) 找峰；四点差分数值 Hessian → cov=inv(H)；multivariate_normal 采样(μ,log_σ)，exp 还原 σ。<br><span class="src">§4.3.5–4.3.6, p99–103</span></div>
+    <div class="vocab"><b>线性模型策略</b> — μ_i = α + β·x_i（确定关系 =）；先验只加参数(α,β,σ)；预测变量 x 是数据，其先验自动在后验中消去。<br><span class="src">§4.4.1, p105–107</span></div>
+    <div class="vocab"><b>中心化 centering</b> — x_c = x − mean(x)；使 α 可解释（= 均值体重处期望身高）；消除 α-β 高度负相关，数值更稳。<br><span class="src">§4.4.3.1, p112–113</span></div>
+    <div class="vocab"><b>两类不确定性</b> — 均值 HPDI（参数 α,β 后验 → 窄）vs 预测 PI（参数+σ随机性 → 宽）。HPDI 不是"实际值落点"。<br><span class="src">§4.4.3.4–5, p115–122</span></div>
+    <div class="vocab"><b>标准化 standardizing</b> — ws = (w−mean)/std；ws² 不爆炸；β 解释为"每增 1 SD 对应的变化"，多变量可横向比较。<br><span class="src">§4.5, p124–125</span></div>
+  </div>
+
+  <div class="formula">
+    <span class="big">log posterior ≈ parabola (Taylor) → exp → Gaussian approximates posterior</span><br>
+    MAP: argmax[log P(data|θ) + log P(θ)]  (denominator P(data) = constant, dropped)<br><br>
+    <span class="big">Cov = inv(H_neg_log_post)  at MAP</span><br>
+    SE(σ) = SE(log_σ) × σ  (delta method)<br><br>
+    <span class="big">mu_mat[:,i] = a_samp + b_samp * w_seq[i]   →  HPDI = percentile(mu_mat, [5.5,94.5], axis=0)</span><br>
+    PI: h_sim = rng.normal(mu_mat, sigma_samp[:,None])  →  percentile(h_sim, ...)
+  </div>
+</div>
+
+<h2>④ 关键可视化</h2>
+<div class="card">
+  <figure>
+    <img src="materials/figures/4.3B_map_quap.png" alt="MAP quap 后验">
+    <figcaption>§4.3b — 联合后验热力图（蓝色=网格近似）+ MAP（★）+ 后验采样（红点吻合蓝色峰区）；右图 μ 边缘后验与理论高斯吻合。结果：μ=154.61±0.41, σ=7.73±0.29（p100）</figcaption>
+  </figure>
+  <figure>
+    <img src="materials/figures/4.4A_linear_reg.png" alt="线性回归后验直线 + HPDI + PI">
+    <figcaption>§4.4 — 左：20条采样直线（后验=直线的分布，中心集中、边缘发散）；右：蓝色窄带=均值HPDI（参数不确定，~1cm宽），红色宽带=预测PI（含σ，~20cm宽）。p113–122</figcaption>
+  </figure>
+  <figure>
+    <img src="materials/figures/4.5A_poly_reg.png" alt="多项式回归 + 标准化">
+    <figcaption>§4.5 — 左：抛物线拟合儿童+成人（beta2=-8.4&lt;0，开口向下=重时增速放缓）；右：原始w²达3600（数值爆炸），标准化ws²仅0-4（稳定）。p123–127</figcaption>
+  </figure>
+</div>
+
+<h2>⑤ 方法对比表</h2>
+<div class="card">
+  <table>
+    <tr><th>引擎</th><th>参数规模</th><th>后验形状要求</th><th>核心代价</th><th>本章场景</th></tr>
+    <tr><td><b>网格近似</b></td><td>1–3 个</td><td>任意</td><td>格点数 k^n，指数爆炸</td><td>§4.3a 双参数教学可视化</td></tr>
+    <tr><td><b>MAP 二次近似</b></td><td>几十个</td><td>近似高斯（大样本较准）</td><td>后验偏态/多峰时失准</td><td>§4.3b–4.5 主力推断</td></tr>
+    <tr><td><b>MCMC</b></td><td>任意</td><td>任意</td><td>慢；需收敛诊断</td><td>第8章登场</td></tr>
+  </table>
+  <br>
+  <table>
+    <tr><th></th><th>均值 HPDI</th><th>预测 PI</th></tr>
+    <tr><td><b>含义</b></td><td>μ_i = α+β·x 的后验不确定性</td><td>实际观测 h_i 的落点范围</td></tr>
+    <tr><td><b>宽度（weight=50）</b></td><td>约 1 cm</td><td>约 20 cm</td></tr>
+    <tr><td><b>代码</b></td><td>percentile(mu_mat, [5.5,94.5], axis=0)</td><td>percentile(rng.normal(mu_mat, σ_samp[:,None]), …)</td></tr>
+    <tr><td><b>常见误读</b></td><td colspan="2">把均值HPDI当成个体预测区间 → 严重低估不确定性</td></tr>
+  </table>
+</div>
+
+<h2>⑥ ★ 你的学习画像（第4章真实表现）</h2>
+
+<div class="pill idea">
+  <h3>🌟 高光与兴趣</h3>
+  <ul>
+    <li>连发 10+ 个跨层次深度追问（贝叶斯 → 优化算法 → 数值分析），全部自推或理解到位</li>
+    <li>能辨别数学术语精确度："v^T H v 叫曲率不准确，应是二阶方向导数"</li>
+    <li>主动推导预测变量先验消去的形式理由（P(weights) 在分子分母约掉）</li>
+    <li>所有算法步骤均一次口述正确；"实现吧"稳定交权，代码分工高效</li>
+    <li>本章所有 OJ 练习全部通过：ex_4.3A/B, ex_4.4A, ex_4.5A</li>
+  </ul>
+</div>
+
+<div class="pill warn">
+  <h3>⚠️ 易错点（active error-log）</h3>
+  <table>
+    <tr><th>类别</th><th><span class="wrong">❌ 错误写法</span></th><th><span class="right">✅ 正确版本</span></th></tr>
+    <tr><td>二次近似方向</td><td class="wrong">高斯 ≈ 抛物线</td><td class="right">对数后验 ≈ 抛物线；高斯的对数 = 抛物线（精确）</td></tr>
+    <tr><td>μ_i 先验</td><td class="wrong">lp_mu = logpdf(mu_i, …) 在 neg_log_post 里</td><td class="right">μ_i 是确定值（=），无先验；先验只加 α,β,σ</td></tr>
+    <tr><td>广播插维</td><td class="wrong">heights[n, n]（整数索引）</td><td class="right">heights[:, None, None]（None 插新轴）</td></tr>
+    <tr><td>np.where 条件</td><td class="wrong">np.where(SIGMA, …)</td><td class="right">np.where((SIGMA &gt; 0) &amp; (SIGMA &lt;= 50), …)</td></tr>
+    <tr><td>HPDI 解读</td><td class="wrong">"HPDI = 实际身高89%落点"</td><td class="right">HPDI 是均值μ的区间；实际落点需再加σ → 预测PI</td></tr>
+  </table>
+</div>
+
+<div class="pill warn">
+  <h3>🎯 待强化</h3>
+  <ul>
+    <li>均值HPDI vs 预测PI 的区分——下章遇到两类不确定性时主动区分</li>
+    <li>beta2 统计含义（增速递减模式）先看数据规律，再思考原因，不要跳到生物联想</li>
+    <li>未交 homework：hw_4.3B.py（强先验效果）和 hw_4.4A.py（中心化验证）</li>
+  </ul>
+</div>
+
+<div class="pill good">
+  <h3>✅ 本章已攻克</h3>
+  <ul>
+    <li>MAP 完整流程（neg_log_post → BFGS → Hessian → 协方差 → 后验采样）</li>
+    <li>log 参数化 + delta method 转换 SE</li>
+    <li>μ_i 是确定值无先验（F2 秒答正确）</li>
+    <li>对数后验 ≈ 抛物线的方向（F1 秒答正确）</li>
+    <li>标准化双重理由（数值稳定 + 参数可解释）</li>
+    <li>MAP 不积分 + 预测变量先验消去的形式推导</li>
+    <li>BFGS 原理、停止条件、维度诅咒（第4章延伸追问全通）</li>
+  </ul>
+</div>
+
+<h2>⑦ 速查卡</h2>
+<div class="card">
+<pre><span class="c"># §4.3b — MAP + 数值Hessian + 后验采样</span>
+def neg_log_post(params):
+    mu, log_sigma = params
+    sigma = np.exp(log_sigma)
+    ll = np.sum(stats.norm.logpdf(heights, mu, sigma))
+    return -(ll + stats.norm.logpdf(mu, 178, 20))
+
+res = minimize(neg_log_post, [170, np.log(8)], method='BFGS')
+eps = 1e-4; H = np.zeros((2,2))
+for i in range(2):
+    for j in range(2):
+        xpp=res.x.copy(); xpp[i]+=eps; xpp[j]+=eps
+        xpm=res.x.copy(); xpm[i]+=eps; xpm[j]-=eps
+        xmp=res.x.copy(); xmp[i]-=eps; xmp[j]+=eps
+        xmm=res.x.copy(); xmm[i]-=eps; xmm[j]-=eps
+        H[i,j]=(neg_log_post(xpp)-neg_log_post(xpm)
+                -neg_log_post(xmp)+neg_log_post(xmm))/(4*eps**2)
+cov = np.linalg.inv(H)
+samp = rng.multivariate_normal(res.x, cov, 10000)
+post = np.column_stack([samp[:,0], np.exp(samp[:,1])])   <span class="c"># (μ, σ)</span>
+
+<span class="c"># §4.4 — 线性回归：两类不确定性</span>
+mu_mat  = a[:,None] + b[:,None] * w_seq[None,:]           <span class="c"># (10000, N_seq)</span>
+hpdi    = np.percentile(mu_mat, [5.5,94.5], axis=0)      <span class="c"># 均值HPDI（参数）</span>
+h_sim   = rng.normal(mu_mat, sigma[:,None])
+pi      = np.percentile(h_sim, [5.5,94.5], axis=0)       <span class="c"># 预测PI（含σ）</span>
+
+<span class="c"># §4.5 — 多项式回归标准化</span>
+ws  = (weights - weights.mean()) / weights.std()
+ws2 = ws ** 2
+<span class="c"># neg_log_post: mu_i = a + b1*ws + b2*ws2, params=(a,b1,b2,log_sigma)</span>
+<span class="c"># MAP结果(p125): a=146.66, b1=21.40, b2=-8.42, sigma=5.75</span></pre>
+</div>
+
+<h2>⑧ 下一步</h2>
+<div class="card">
+  <p><b>第4章全部完结</b>（§4.1–4.5，6节 + 章末复习）。</p>
+  <p>第5章 Multivariate Linear Models 将回答：多个预测变量时，为什么要<b>同时控制其他变量</b>？虚假相关（spurious correlation）和遮蔽效应（masking）是什么？这是从"描述"走向"因果推断"的第一步。</p>
+  <ul>
+    <li>✏️ 补交：<code>homework/hw_4.3B.py</code> 和 <code>homework/hw_4.4A.py</code></li>
+    <li>📖 生成下章教案：<span class="kbd">/chapter 5</span></li>
+    <li>▶️ 开始下章：<span class="kbd">/lesson</span></li>
+  </ul>
+</div>
